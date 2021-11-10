@@ -71,9 +71,9 @@ void Wire::requestFrom(uint16_t slaveAddr,uint16_t regAddr, uint16_t count)
     I2C_setSlaveAddress(I2CA_BASE,slaveAddr);
     I2C_setConfig(I2CA_BASE, (I2C_MASTER_SEND_MODE|I2C_REPEAT_MODE));
     I2C_sendStartCondition(I2CA_BASE);
-    while(!(I2C_getInterruptSource(I2CA_BASE)&&3));
+    while(!(I2C_getInterruptSource(I2CA_BASE)&3));
     I2C_putData(I2CA_BASE, regAddr);
-    while(!(I2C_getInterruptSource(I2CA_BASE)&&5));
+    while(!(I2C_getInterruptSource(I2CA_BASE)&5));
     I2C_sendStopCondition(I2CA_BASE);
     while (I2C_getStopConditionStatus(I2CA_BASE));
     I2C_setSlaveAddress(I2CA_BASE,slaveAddr);
@@ -84,17 +84,17 @@ void Wire::requestFrom(uint16_t slaveAddr,uint16_t regAddr, uint16_t count)
 
 void Wire::read(uint16_t *data, uint16_t count)
 {
-    while(!(I2C_getInterruptSource(I2CA_BASE)&&5));
+    while(!(I2C_getInterruptSource(I2CA_BASE)&5));
     for (int i = 0; i < count; i++)
     {
-        while(!(I2C_getInterruptSource(I2CA_BASE)&&4));
+        while(!(I2C_getInterruptSource(I2CA_BASE)&4));
         data[i] = I2C_getData(I2CA_BASE);
     }
 }
 
 void Wire::endTransmission()
 {
-    while(!(I2C_getInterruptSource(I2CA_BASE)&&5));
+    while(!(I2C_getInterruptSource(I2CA_BASE)&5));
     I2C_sendStopCondition(I2CA_BASE);
 }
 
